@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Estimate Statistics</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h1>Estimate Statistics</h1>
+        <p>Enter a list of numbers separated by commas:</p>
+        <input type="text" v-model="numbers">
+        <button v-on:click="calculate">Calculate</button>
+        <button v-if="result" v-on:click="drawGraph">Draw Graph</button>
+        <p v-if="result">Mean: {{ result.mean.toFixed(2) }}</p>
+        <p v-if="result">Variance: {{ result.variance.toFixed(2) }}</p>
+        <p v-if="result">Standard deviation: {{ result.std_dev.toFixed(2) }}</p>
+    </div>
+    <canvas id="myChart"></canvas>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                numbers: '',
+                result: null,
+                graph: null
+            },
+            methods: {
+                calculate: function () {
+                    let nums = this.numbers.split(',').map(Number);
+                    this.result = estimate_statistics(nums);
+                    this.graph = null;
+                },
+                drawGraph: function () {
+                    let x = ['Mean', 'Variance', 'Standard deviation'];
+                    let y = [this.result.mean, this.result.variance, this.result.std_dev];
+                    draw_line_graph(x, y, 'Statistics', 'Type', 'Value');
+                    this.graph = true;
+                }
+            }
+        });
+
+        function estimate_statistics(nums) {
+            let n = nums.length;
+            let mean = nums.reduce((a, b) => a + b, 0) / n;
+            let variance = nums.reduce((a, b) => a + (b - mean) ** 2, 0) / (n - 1);
+            let std_dev = Math.sqrt(variance);
+            return { mean, variance, std_dev };
+        }
+
+        function draw_line_graph(x, y, title, xlabel, ylabel) {
+            let ctx = document.getElementById('myChart').getContext('2d');
+            let chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: x,
+                    datasets: [{
+                        label: ylabel,
+                        data: y,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: title
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                max: Math.max(...y) + 1
+                            }
+                        }]
+                    },
+                    annotation: {
+                        annotations: [{
+                            type: 'line',
+                            mode: 'vertical',
+                            scaleID: 'x-axis-0',
+                            value: y[0], // the mean value is the first value in the y array
+                            borderColor: 'purple',
+                            borderWidth: 1,
+                            label: {
+                                enabled: true,
+                                content: 'Mean'
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+
+    </script>
+</body>
+
+</html>
