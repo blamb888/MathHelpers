@@ -52,7 +52,7 @@ ROOT_URLCONF = 'MathHelpers.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')], # Add templates directory path here
+        'DIRS': [os.path.join(BASE_DIR, 'MathHelpersApp/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
