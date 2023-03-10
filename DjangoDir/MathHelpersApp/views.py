@@ -12,7 +12,7 @@ def home(request):
         # Get the data from the form
         data = request.POST['data']
         # Convert the comma-separated string input to a NumPy array
-        data = np.array(data.split(',').map(float))
+        data = np.array(list(map(float, data.split(','))))
         # Calculate the mean, variance, and standard deviation
         mean = np.mean(data)
         variance = np.var(data, ddof=1)
