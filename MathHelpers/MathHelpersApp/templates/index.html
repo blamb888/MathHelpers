@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Estimate Statistics</title>
+</head>
+<body>
+    <h1>Estimate Statistics</h1>
+    <form method="POST" action="{% url 'home' %}">
+        {% csrf_token %}
+        <label for="data">Enter data (comma-separated):</label>
+        <input type="text" id="data" name="data">
+        <br>
+        <button type="submit">Calculate</button>
+    </form>
+    {% if mean %}
+        <p>Mean: {{ mean|floatformat:2 }}</p>
+    {% endif %}
+    {% if variance %}
+        <p>Variance: {{ variance|floatformat:2 }}</p>
+    {% endif %}
+    {% if std_dev %}
+        <p>Standard deviation: {{ std_dev|floatformat:2 }}</p>
+    {% endif %}
+</body>
+<script src="{% static 'math_app/js/plot.js' %}"></script>
+</html>
